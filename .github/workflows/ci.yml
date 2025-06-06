@@ -51,3 +51,4 @@ jobs:
                 ./k8s/service.yaml
                 ./k8s/ingress.yaml
                   
+                
