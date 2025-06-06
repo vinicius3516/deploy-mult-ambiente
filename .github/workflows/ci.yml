@@ -27,6 +27,12 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
 
+            - name: Valida recebimento de Secrets
+              run: |
+                  echo "Secrets are set correctly"
+                  echo "DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}"
+                  echo "DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}"
+
             - name: Authenticate with Docker Hub
               uses: docker/login-action@v1
               with:
