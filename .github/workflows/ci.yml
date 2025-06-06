@@ -1,24 +1,21 @@
 name: Kube-News
 on:
+    pull_request:
+        branches:
+            - main
+    push:
+        branches:
+            - feature/*
     workflow_dispatch:
         inputs:
             ambiente:
                 description: 'Ambiente de destino'
-                required: true
+                required: false
                 default: 'dev'
-                type: choice
-                options:
-                    - dev
-                    - staging
-                    - prod
             dockerfile_path:
                 description: 'Caminho do Dockerfile'
-                required: true
+                required: false
                 default: './src/Dockerfile'
-                type: string
-    push:
-        branches:
-            - feature/*
 jobs:
     build:
         environment: ${{ github.event.inputs.ambiente || 'dev' }}
@@ -41,3 +38,15 @@ jobs:
             - name: Push Docker image
               run: |
                   docker push ${{ secrets.DOCKER_HUB_USERNAME }}/kube-news:${{ github.sha }}
+
+    deploy:
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        needs: build
+        uses: vinicius3516/devops-tools/.github/workflows/deploy-do.yml@main
+        with:
+            ambiente: ${{ github.event.inputs.ambiente || 'dev' }}
+            image_tag: ${{ github.sha }}
+            manifests: |
+                ./k8s/deployment.yaml
+                ./k8s/service.yaml
+                ./k8s/ingress.yaml
