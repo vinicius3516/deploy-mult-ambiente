@@ -47,9 +47,9 @@ jobs:
             ambiente: ${{ github.event.inputs.ambiente || 'dev' }}
             image_tag: ${{ github.sha }}
             manifests: |
-                ./k8s/deployment.yaml
-                ./k8s/service.yaml
-                ./k8s/ingress.yaml
+                k8s/deployment.yaml
+                k8s/ingress.yaml
+                k8s/secret.yaml
         secrets:
             kubeconfig: ${{ secrets.KUBECONFIG }}
                   
