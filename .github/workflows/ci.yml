@@ -1,1 +1,39 @@
+name: Kube-News
+on:
+    workflow_dispatch:
+        inputs:
+            ambiente:
+                description: 'Ambiente de destino'
+                required: true
+                default: 'dev'
+                type: choice
+                options:
+                    - dev
+                    - staging
+                    - prod
+            dockerfile_path:
+                description: 'Caminho do Dockerfile'
+                required: true
+                default: './src/Dockerfile'
+                type: string
+jobs:
+    build:
+        environment: ${{ github.event.inputs.ambiente }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
 
+            - name: Authenticate with Docker Hub
+              uses: docker/login-action@v1
+              with:
+                  username: ${{ secrets.DOCKER_HUB_USERNAME }}
+                  token: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+            - name: Build Docker image
+              run: |
+                  docker build -f ${{ github.event.inputs.dockerfile_path }} -t ${{ secrets.DOCKER_HUB_USERNAME }}/kube-news:${{ github.sha }} ./src
+
+            - name: Push Docker image
+              run: |
+                  docker push ${{ secrets.DOCKER_HUB_USERNAME }}/kube-news:${{ github.sha }}
