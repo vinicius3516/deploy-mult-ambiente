@@ -51,4 +51,6 @@ jobs:
                 ./k8s/ingress.yaml
         secrets:
             kubeconfig: ${{ secrets.KUBECONFIG }}
-                  
+                
+
+            
