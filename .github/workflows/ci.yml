@@ -52,4 +52,3 @@ jobs:
         secrets:
             kubeconfig: ${{ secrets.KUBECONFIG }}
                   
-            
