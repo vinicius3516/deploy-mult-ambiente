@@ -30,6 +30,7 @@ jobs:
             - name: Valida recebimento de Secrets
               run: |
                   echo "Secrets are set correctly"
+                  echo "Ambiente: ${{ github.event.inputs.ambiente }}"
                   echo "DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}"
                   echo "DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}"
 
